@@ -28,7 +28,7 @@ class Person(Base):
 class Thing(Base):
     __tablename__ = "things"
 
-    tid = Column("tid", Integer)
+    tid = Column("tid", Integer, primary_key=True)
     description = Column("description", String)
     owner = Column(Integer, ForeignKey("people.ssn"))
 
@@ -49,17 +49,31 @@ session = Session()
 
 
 person = Person(123, "Mike", "Blue", "m", 35)
-session.add(person)
+# session.add(person)
 
 
 p1 = Person(456, "Anna", "Biden", "f", 30)
 p2 = Person(789, "Carlos", "Infante", "m", 43)
 p3 = Person(100, "Flaki", "Rica", "f", 34)
 
-session.add(p1)
-session.add(p2)
-session.add(p3)
-session.commit()
+'''I need to comment the session add and commit otherwise when I run the program it will give an error coz the table and the data already exist'''
+# session.add(p1)
+# session.add(p2)
+# session.add(p3)
+# session.commit()
+
+t1 = Thing(1, "Car", person.ssn)
+t2 = Thing(2, "Laptop", p1.ssn)
+t3 = Thing(3, "Celphone", person.ssn)
+t4 = Thing(4, "Bike", p2.ssn)
+t5 = Thing(5, "Earphones", p3.ssn)
+# session.add(t1)
+# session.add(t2)
+# session.add(t3)
+# session.add(t4)
+# session.add(t5)
+# session.commit()
+
 
 result = session.query(Person).all()
 print(result)
@@ -81,3 +95,10 @@ Checking = session.query(Person).filter(
     Person.firstname.in_(["carlos", "Flaki"]))
 for x in Checking:
     print(x)
+
+# print the objects to belon to the person and the person data with the folled example
+xxx = session.query(Thing, Person).filter(
+    Thing.owner == Person.ssn).filter(Person.firstname == "Flaki").all()
+
+for r in xxx:
+    print(r)
